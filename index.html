@@ -6,9 +6,9 @@
 <title>Goalie Training Program</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f3; color: #2C2C2A; min-height: 100vh; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f8ff; color: #2C2C2A; min-height: 100vh; }
 .app { max-width: 480px; margin: 0 auto; padding: 0 0 2rem; }
-.header { background: #1a5f7a; color: white; padding: 1.25rem 1rem 1rem; text-align: center; }
+.header { background: #0077a8; color: white; padding: 1.25rem 1rem 1rem; text-align: center; }
 .header h1 { font-size: 20px; font-weight: 600; }
 .header p { font-size: 12px; opacity: 0.8; margin-top: 3px; }
 .phase-badge { display: inline-block; background: rgba(255,255,255,0.2); color: white; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; margin-bottom: 8px; }
@@ -16,61 +16,61 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .week-tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
 .week-tabs::-webkit-scrollbar { display: none; }
 .week-tab { flex-shrink: 0; padding: 5px 12px; border-radius: 20px; border: 1.5px solid #D3D1C7; background: white; color: #888780; font-size: 12px; font-weight: 500; cursor: pointer; white-space: nowrap; }
-.week-tab.active { background: #1a5f7a; color: white; border-color: #1a5f7a; }
+.week-tab.active { background: #0077a8; color: white; border-color: #0077a8; }
 .day-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; padding: 10px 12px; background: white; border-bottom: 1px solid #e0e0dc; }
 .day-tab { padding: 8px 4px; border-radius: 8px; border: 1px solid #D3D1C7; background: white; color: #888780; font-size: 12px; font-weight: 500; cursor: pointer; text-align: center; }
-.day-tab.active { background: #e8f4f8; color: #1a5f7a; border-color: #1a5f7a; font-weight: 600; }
+.day-tab.active { background: #e0f4ff; color: #0077a8; border-color: #0077a8; font-weight: 600; }
 .progress-wrap { padding: 10px 14px 0; }
 .progress-text { font-size: 12px; color: #888780; margin-bottom: 5px; }
 .progress-bar { height: 5px; background: #e0e0dc; border-radius: 3px; overflow: hidden; }
-.progress-fill { height: 100%; background: #3B6D11; border-radius: 3px; transition: width 0.3s; }
-.rest-bar { background: #1a5f7a; padding: 10px 14px; display: none; align-items: center; gap: 10px; }
+.progress-fill { height: 100%; background: #2d9e3a; border-radius: 3px; transition: width 0.3s; }
+.rest-bar { background: #0077a8; padding: 10px 14px; display: none; align-items: center; gap: 10px; }
 .rest-bar.visible { display: flex; }
 .rest-label { color: white; font-size: 12px; font-weight: 500; white-space: nowrap; }
 .rest-countdown { color: white; font-size: 20px; font-weight: 700; min-width: 36px; text-align: center; }
 .rest-track { flex: 1; height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px; overflow: hidden; }
-.rest-fill { height: 100%; background: #9FE1CB; border-radius: 2px; transition: width 1s linear; }
+.rest-fill { height: 100%; background: #7dd4f0; border-radius: 2px; transition: width 1s linear; }
 .rest-skip { color: rgba(255,255,255,0.6); font-size: 11px; cursor: pointer; white-space: nowrap; }
 .content { padding: 0 12px; }
 .section-label { font-size: 10px; font-weight: 700; color: #888780; text-transform: uppercase; letter-spacing: 0.07em; margin: 14px 0 6px; display: flex; align-items: center; justify-content: space-between; }
-.section-rest { font-size: 10px; color: #0F6E56; font-weight: 600; }
+.section-rest { font-size: 10px; color: #0077a8; font-weight: 600; }
 .ex-card { background: white; border: 1px solid #e8e8e4; border-radius: 10px; padding: 11px 12px; margin-bottom: 6px; display: flex; align-items: flex-start; gap: 10px; }
 .ex-card.done { opacity: 0.45; }
-.ex-card.done .check { background: #3B6D11; border-color: #3B6D11; }
+.ex-card.done .check { background: #2d9e3a; border-color: #3B6D11; }
 .ex-card.done .check-icon { opacity: 1; }
 .check { width: 22px; height: 22px; min-width: 22px; border-radius: 50%; border: 2px solid #D3D1C7; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.2s; cursor: pointer; margin-top: 1px; }
 .check-icon { opacity: 0; color: white; font-size: 13px; line-height: 1; }
 .ex-info { flex: 1; min-width: 0; }
 .ex-name { font-size: 14px; font-weight: 600; color: #2C2C2A; }
 .ex-detail { font-size: 12px; color: #888780; margin-top: 1px; }
-.ex-tip { font-size: 11px; color: #0F6E56; margin-top: 3px; font-style: italic; }
+.ex-tip { font-size: 11px; color: #007a45; margin-top: 3px; font-style: italic; }
 .btn-row { display: flex; gap: 6px; margin-top: 5px; flex-wrap: wrap; }
-.how-btn { padding: 3px 9px; border-radius: 20px; border: 1px solid #1a5f7a; background: #e8f4f8; color: #1a5f7a; font-size: 11px; font-weight: 500; cursor: pointer; }
-.rest-btn { padding: 3px 9px; border-radius: 20px; border: 1px solid #0F6E56; background: #EAF3DE; color: #0F6E56; font-size: 11px; font-weight: 500; cursor: pointer; }
+.how-btn { padding: 3px 9px; border-radius: 20px; border: 1px solid #0077a8; background: #e0f4ff; color: #0077a8; font-size: 11px; font-weight: 500; cursor: pointer; }
+.rest-btn { padding: 3px 9px; border-radius: 20px; border: 1px solid #0077a8; background: #e0f4ff; color: #0077a8; font-size: 11px; font-weight: 500; cursor: pointer; }
 .reset-btn { display: block; width: 100%; margin-top: 14px; padding: 11px; border-radius: 10px; border: 1px solid #D3D1C7; background: white; color: #888780; font-size: 13px; cursor: pointer; text-align: center; }
 .confetti-wrap { text-align: center; padding: 1.5rem 1rem; display: none; }
 .confetti-wrap.show { display: block; }
-.confetti-wrap p { font-size: 15px; font-weight: 600; color: #1a5f7a; }
+.confetti-wrap p { font-size: 15px; font-weight: 600; color: #0077a8; }
 .confetti-wrap span { font-size: 36px; display: block; margin-bottom: 8px; }
 .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; align-items: flex-end; justify-content: center; }
 .modal-overlay.open { display: flex; }
 .modal { background: white; border-radius: 20px 20px 0 0; padding: 1.25rem 1.25rem 2rem; width: 100%; max-width: 480px; max-height: 80vh; overflow-y: auto; }
 .modal-handle { width: 36px; height: 4px; background: #D3D1C7; border-radius: 2px; margin: 0 auto 1rem; }
-.modal-name { font-size: 17px; font-weight: 700; color: #1a5f7a; margin-bottom: 4px; }
+.modal-name { font-size: 17px; font-weight: 700; color: #0077a8; margin-bottom: 4px; }
 .modal-detail { font-size: 12px; color: #888780; margin-bottom: 1rem; }
 .modal-steps { list-style: none; padding: 0; }
 .modal-steps li { display: flex; gap: 10px; margin-bottom: 10px; font-size: 14px; line-height: 1.5; color: #2C2C2A; }
-.modal-steps li .num { background: #1a5f7a; color: white; border-radius: 50%; width: 22px; height: 22px; min-width: 22px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; margin-top: 1px; }
-.modal-goalie { background: #EAF3DE; border-radius: 8px; padding: 10px 12px; margin-top: 12px; font-size: 12px; color: #3B6D11; line-height: 1.5; }
+.modal-steps li .num { background: #0077a8; color: white; border-radius: 50%; width: 22px; height: 22px; min-width: 22px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; margin-top: 1px; }
+.modal-goalie { background: #e0f4ff; border-radius: 8px; padding: 10px 12px; margin-top: 12px; font-size: 12px; color: #005f87; line-height: 1.5; }
 .modal-goalie strong { font-weight: 600; }
-.modal-close { display: block; width: 100%; margin-top: 14px; padding: 12px; border-radius: 10px; border: none; background: #1a5f7a; color: white; font-size: 14px; font-weight: 600; cursor: pointer; }
+.modal-close { display: block; width: 100%; margin-top: 14px; padding: 12px; border-radius: 10px; border: none; background: #0077a8; color: white; font-size: 14px; font-weight: 600; cursor: pointer; }
 </style>
 </head>
 <body>
 <div class="app">
   <div class="header">
     <div class="phase-badge" id="phase-badge">Phase 1: Foundation</div>
-    <h1>Goalie Training &#127944;</h1>
+    <h1>Goalie Training &#127954;</h1>
     <p id="header-sub">3 days/week · 45 min per session</p>
   </div>
   <div class="tabs-wrap">
