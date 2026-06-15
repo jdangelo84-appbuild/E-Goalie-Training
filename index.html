@@ -24,9 +24,17 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .progress-text { font-size: 12px; color: #888780; margin-bottom: 5px; }
 .progress-bar { height: 5px; background: #e0e0dc; border-radius: 3px; overflow: hidden; }
 .progress-fill { height: 100%; background: #3B6D11; border-radius: 3px; transition: width 0.3s; }
+.rest-bar { background: #1a5f7a; padding: 10px 14px; display: none; align-items: center; gap: 10px; }
+.rest-bar.visible { display: flex; }
+.rest-label { color: white; font-size: 12px; font-weight: 500; white-space: nowrap; }
+.rest-countdown { color: white; font-size: 20px; font-weight: 700; min-width: 36px; text-align: center; }
+.rest-track { flex: 1; height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px; overflow: hidden; }
+.rest-fill { height: 100%; background: #9FE1CB; border-radius: 2px; transition: width 1s linear; }
+.rest-skip { color: rgba(255,255,255,0.6); font-size: 11px; cursor: pointer; white-space: nowrap; }
 .content { padding: 0 12px; }
-.section-label { font-size: 10px; font-weight: 700; color: #888780; text-transform: uppercase; letter-spacing: 0.07em; margin: 14px 0 6px; }
-.ex-card { background: white; border: 1px solid #e8e8e4; border-radius: 10px; padding: 11px 12px; margin-bottom: 6px; display: flex; align-items: flex-start; gap: 10px; -webkit-tap-highlight-color: transparent; }
+.section-label { font-size: 10px; font-weight: 700; color: #888780; text-transform: uppercase; letter-spacing: 0.07em; margin: 14px 0 6px; display: flex; align-items: center; justify-content: space-between; }
+.section-rest { font-size: 10px; color: #0F6E56; font-weight: 600; }
+.ex-card { background: white; border: 1px solid #e8e8e4; border-radius: 10px; padding: 11px 12px; margin-bottom: 6px; display: flex; align-items: flex-start; gap: 10px; }
 .ex-card.done { opacity: 0.45; }
 .ex-card.done .check { background: #3B6D11; border-color: #3B6D11; }
 .ex-card.done .check-icon { opacity: 1; }
@@ -36,14 +44,14 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .ex-name { font-size: 14px; font-weight: 600; color: #2C2C2A; }
 .ex-detail { font-size: 12px; color: #888780; margin-top: 1px; }
 .ex-tip { font-size: 11px; color: #0F6E56; margin-top: 3px; font-style: italic; }
-.how-btn { display: inline-block; margin-top: 5px; padding: 3px 9px; border-radius: 20px; border: 1px solid #1a5f7a; background: #e8f4f8; color: #1a5f7a; font-size: 11px; font-weight: 500; cursor: pointer; }
+.btn-row { display: flex; gap: 6px; margin-top: 5px; flex-wrap: wrap; }
+.how-btn { padding: 3px 9px; border-radius: 20px; border: 1px solid #1a5f7a; background: #e8f4f8; color: #1a5f7a; font-size: 11px; font-weight: 500; cursor: pointer; }
+.rest-btn { padding: 3px 9px; border-radius: 20px; border: 1px solid #0F6E56; background: #EAF3DE; color: #0F6E56; font-size: 11px; font-weight: 500; cursor: pointer; }
 .reset-btn { display: block; width: 100%; margin-top: 14px; padding: 11px; border-radius: 10px; border: 1px solid #D3D1C7; background: white; color: #888780; font-size: 13px; cursor: pointer; text-align: center; }
 .confetti-wrap { text-align: center; padding: 1.5rem 1rem; display: none; }
 .confetti-wrap.show { display: block; }
 .confetti-wrap p { font-size: 15px; font-weight: 600; color: #1a5f7a; }
 .confetti-wrap span { font-size: 36px; display: block; margin-bottom: 8px; }
-
-/* Modal */
 .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; align-items: flex-end; justify-content: center; }
 .modal-overlay.open { display: flex; }
 .modal { background: white; border-radius: 20px 20px 0 0; padding: 1.25rem 1.25rem 2rem; width: 100%; max-width: 480px; max-height: 80vh; overflow-y: auto; }
@@ -62,15 +70,15 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 <div class="app">
   <div class="header">
     <div class="phase-badge" id="phase-badge">Phase 1: Foundation</div>
-    <h1>Goalie Training 🏒</h1>
+    <h1>Goalie Training &#127944;</h1>
     <p id="header-sub">3 days/week · 45 min per session</p>
   </div>
   <div class="tabs-wrap">
     <div class="week-tabs">
-      <button class="week-tab active" onclick="setWeek(1)">Week 1–2</button>
-      <button class="week-tab" onclick="setWeek(3)">Week 3–4</button>
-      <button class="week-tab" onclick="setWeek(5)">Week 5–6</button>
-      <button class="week-tab" onclick="setWeek(7)">Week 7–8</button>
+      <button class="week-tab active" onclick="setWeek(1)">Week 1-2</button>
+      <button class="week-tab" onclick="setWeek(3)">Week 3-4</button>
+      <button class="week-tab" onclick="setWeek(5)">Week 5-6</button>
+      <button class="week-tab" onclick="setWeek(7)">Week 7-8</button>
     </div>
   </div>
   <div class="day-tabs">
@@ -82,312 +90,217 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
     <div class="progress-text" id="progress-text">0 of 0 done</div>
     <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
   </div>
+  <div class="rest-bar" id="rest-bar">
+    <span class="rest-label">Rest</span>
+    <span class="rest-countdown" id="rest-countdown">60</span>
+    <div class="rest-track"><div class="rest-fill" id="rest-fill" style="width:100%"></div></div>
+    <span class="rest-skip" onclick="skipRest()">skip x</span>
+  </div>
   <div class="content">
     <div id="exercise-list"></div>
     <div class="confetti-wrap" id="confetti">
-      <span>🎉</span>
+      <span>&#127881;</span>
       <p>Session complete. Get off the ice.</p>
     </div>
-    <button class="reset-btn" onclick="resetDay()">↺ Reset day</button>
+    <button class="reset-btn" onclick="resetDay()">&#8634; Reset day</button>
   </div>
 </div>
-
-<!-- Modal -->
-<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
-  <div class="modal" id="modal">
+<div class="modal-overlay" id="modal-overlay" onclick="closeModalOutside(event)">
+  <div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-name" id="modal-name"></div>
     <div class="modal-detail" id="modal-detail"></div>
     <ul class="modal-steps" id="modal-steps"></ul>
     <div class="modal-goalie" id="modal-goalie"></div>
-    <button class="modal-close" onclick="closeModalDirect()">Got it</button>
+    <button class="modal-close" onclick="closeModal()">Got it</button>
   </div>
 </div>
-
 <script>
-const howTo = {
+
+var restInterval = null;
+var restRemaining = 0;
+var restTotal = 0;
+
+function startRest(seconds) {
+  if (restInterval) clearInterval(restInterval);
+  restRemaining = seconds;
+  restTotal = seconds;
+  document.getElementById('rest-bar').classList.add('visible');
+  updateRestDisplay();
+  restInterval = setInterval(function() {
+    restRemaining--;
+    updateRestDisplay();
+    if (restRemaining <= 0) finishRest();
+  }, 1000);
+}
+
+function updateRestDisplay() {
+  document.getElementById('rest-countdown').textContent = restRemaining;
+  var pct = (restRemaining / restTotal) * 100;
+  document.getElementById('rest-fill').style.width = pct + '%';
+  document.getElementById('rest-fill').style.background = restRemaining <= 10 ? '#E24B4A' : '#9FE1CB';
+}
+
+function finishRest() {
+  if (restInterval) clearInterval(restInterval);
+  restInterval = null;
+  document.getElementById('rest-bar').classList.remove('visible');
+  try {
+    var ctx = new (window.AudioContext || window.webkitAudioContext)();
+    [0, 0.15, 0.3].forEach(function(t) {
+      var o = ctx.createOscillator();
+      var g = ctx.createGain();
+      o.connect(g); g.connect(ctx.destination);
+      o.frequency.value = 880;
+      g.gain.setValueAtTime(0.3, ctx.currentTime + t);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + t + 0.12);
+      o.start(ctx.currentTime + t);
+      o.stop(ctx.currentTime + t + 0.15);
+    });
+  } catch(e) {}
+}
+
+function skipRest() {
+  if (restInterval) clearInterval(restInterval);
+  restInterval = null;
+  document.getElementById('rest-bar').classList.remove('visible');
+}
+
+var restTimes = { warmup: 0, main: 60, core: 30, run: 0 };
+
+var howTo = {
   "Jog in place": {
-    steps: [
-      "Stand tall, feet hip-width apart.",
-      "Lift your knees to about hip height, one at a time — like running but staying in one spot.",
-      "Pump your arms naturally, same as if you were running.",
-      "Keep a light bounce — stay on the balls of your feet, not flat-footed."
-    ],
+    steps: ["Stand tall, feet hip-width apart.", "Lift your knees to about hip height, one at a time - like running but staying in one spot.", "Pump your arms naturally, same as if you were running.", "Stay on the balls of your feet, not flat-footed."],
     goalie: "This is pure warmup. Get your heart rate up and your legs loose before anything else."
   },
   "Jog": {
-    steps: [
-      "Easy pace — you should be able to talk.",
-      "Land mid-foot, not on your heels.",
-      "Keep your shoulders relaxed, arms swinging forward and back (not across your body).",
-      "3 minutes is enough — you're just warming the engine."
-    ],
+    steps: ["Easy pace - you should be able to talk.", "Land mid-foot, not on your heels.", "Keep your shoulders relaxed, arms swinging forward and back.", "3 minutes is enough - just warming the engine."],
     goalie: "Don't sprint this. Save the effort for the main work."
   },
   "Leg swings": {
-    steps: [
-      "Stand next to a wall or fence and hold it lightly for balance.",
-      "Swing one leg forward and back like a pendulum — loose and relaxed, not forced.",
-      "Do 10 front-to-back, then turn and do 10 side-to-side.",
-      "Switch legs and repeat."
-    ],
+    steps: ["Stand next to a wall or fence and hold it lightly for balance.", "Swing one leg forward and back like a pendulum - loose and relaxed, not forced.", "Do 10 front-to-back, then turn and do 10 side-to-side.", "Switch legs and repeat."],
     goalie: "Goalies live in their hips. These get the hip joint moving before you ask it to work hard."
   },
   "Hip circles": {
-    steps: [
-      "Stand with feet shoulder-width apart, hands on your hips.",
-      "Draw a big slow circle with your hips — forward, side, back, side.",
-      "Keep your upper body still. Only the hips move.",
-      "Do 10 one direction, then 10 the other way."
-    ],
+    steps: ["Stand with feet shoulder-width apart, hands on your hips.", "Draw a big slow circle with your hips - forward, side, back, side.", "Keep your upper body still. Only the hips move.", "Do 10 one direction, then 10 the other way."],
     goalie: "Think of this as oiling your hips before a game. Wide butterfly saves start here."
   },
   "Lateral shuffles": {
-    steps: [
-      "Get into a slight athletic stance — knees bent, hips back, like you're set in net.",
-      "Push off one foot and slide sideways. Feet never cross each other.",
-      "Stay low the whole time. If you stand up, you're doing it wrong.",
-      "Go 5 steps one way, 5 steps back. Keep going for 30 seconds."
-    ],
+    steps: ["Get into a slight athletic stance - knees bent, hips back, like you're set in net.", "Push off one foot and slide sideways. Feet never cross each other.", "Stay low the whole time. If you stand up, you're doing it wrong.", "Go 5 steps one way, 5 steps back. Keep going for 30 seconds."],
     goalie: "This is literally what you do in net. Stay low, push off the inside edge of your foot."
   },
   "High knees": {
-    steps: [
-      "Run in place but drive your knees up as high as you can — aim for hip height.",
-      "Pump your arms hard, opposite arm to opposite knee.",
-      "Stay on the balls of your feet. Fast feet.",
-      "Go for 30 seconds at a good pace."
-    ],
+    steps: ["Run in place but drive your knees up as high as you can - aim for hip height.", "Pump your arms hard, opposite arm to opposite knee.", "Stay on the balls of your feet. Fast feet.", "Go for 30 seconds at a good pace."],
     goalie: "Gets your hip flexors fired up and your heart rate climbing fast."
   },
   "Bodyweight squat": {
-    steps: [
-      "Stand with feet shoulder-width apart, toes pointed slightly out.",
-      "Push your hips back first (like you're sitting in a chair behind you), then bend your knees.",
-      "Lower until your thighs are parallel to the ground — or as low as you can with good form.",
-      "Drive through your heels to stand back up. Squeeze your glutes at the top."
-    ],
-    goalie: "Keep your chest up the whole way down. Knees should track over your second toe — never cave inward."
+    steps: ["Stand with feet shoulder-width apart, toes pointed slightly out.", "Push your hips back first, then bend your knees.", "Lower until your thighs are parallel to the ground.", "Drive through your heels to stand back up. Squeeze your glutes at the top."],
+    goalie: "Keep your chest up the whole way down. Knees should track over your second toe - never cave inward."
   },
   "Glute bridge": {
-    steps: [
-      "Lie on your back, knees bent, feet flat on the floor about hip-width apart.",
-      "Press your lower back into the ground, then drive your hips up by squeezing your glutes hard.",
-      "At the top, your body makes a straight line from knees to shoulders.",
-      "Hold for 1 second at the top, then slowly lower. Don't just drop."
-    ],
-    goalie: "Strong glutes = faster butterfly recoveries. Squeeze hard at the top every single rep."
+    steps: ["Lie on your back, knees bent, feet flat on the floor hip-width apart.", "Press your lower back into the ground, then drive your hips up by squeezing your glutes.", "At the top, your body makes a straight line from knees to shoulders.", "Hold for 1 second at the top, then slowly lower."],
+    goalie: "Strong glutes equal faster butterfly recoveries. Squeeze hard at the top every single rep."
   },
   "Single-leg glute bridge": {
-    steps: [
-      "Same as the regular glute bridge, but lift one foot off the floor.",
-      "Keep the lifted leg either straight out or bent — both work.",
-      "Drive through the heel of the foot that's still on the ground.",
-      "Hold 1 second at the top. Do all reps on one side, then switch."
-    ],
-    goalie: "Much harder than it looks. This builds the single-leg strength you need for one-pad saves."
+    steps: ["Same as the regular glute bridge, but lift one foot off the floor.", "Keep the lifted leg either straight out or bent.", "Drive through the heel of the foot still on the ground.", "Hold 1 second at the top. Do all reps on one side, then switch."],
+    goalie: "Much harder than it looks. Builds the single-leg strength you need for one-pad saves."
   },
   "Lateral lunge": {
-    steps: [
-      "Stand with feet together, hands on hips or out in front for balance.",
-      "Take a big step directly to the side with your right foot.",
-      "Bend your right knee and push your hips back — your left leg stays straight.",
-      "Push off your right foot to come back to standing. Repeat on the other side."
-    ],
+    steps: ["Stand with feet together, hands on hips or out in front for balance.", "Take a big step directly to the side with your right foot.", "Bend your right knee and push your hips back. Left leg stays straight.", "Push off your right foot to come back to standing. Repeat other side."],
     goalie: "This is a butterfly in slow motion. Feel the inside of your thigh working as you push back up."
   },
   "Pushup": {
-    steps: [
-      "Start in a plank — hands slightly wider than shoulder-width, body in a straight line head to heels.",
-      "Lower your chest to the floor by bending your elbows. Keep them at roughly 45 degrees from your body.",
-      "Your hips should not sag or pike up. One straight line the whole time.",
-      "Press back up to the start. That's one rep."
-    ],
+    steps: ["Start in a plank - hands slightly wider than shoulder-width, body in a straight line head to heels.", "Lower your chest to the floor by bending your elbows.", "Your hips should not sag or pike up.", "Press back up to the start."],
     goalie: "Goalie pads are heavy. Strong shoulders and chest help you push up off the ice fast."
   },
   "Reverse lunge": {
-    steps: [
-      "Stand tall, feet together.",
-      "Step one foot straight back and lower your back knee toward the floor — stop just before it touches.",
-      "Your front shin should stay vertical. Don't let your front knee shoot past your toes.",
-      "Push through your front heel to come back to standing. Alternate legs."
-    ],
-    goalie: "Easier on the knees than a forward lunge. Good for building single-leg strength without stress."
+    steps: ["Stand tall, feet together.", "Step one foot straight back and lower your back knee toward the floor.", "Your front shin should stay vertical.", "Push through your front heel to come back to standing. Alternate legs."],
+    goalie: "Easier on the knees than a forward lunge. Good for single-leg strength without stress."
   },
   "Dead bug": {
-    steps: [
-      "Lie on your back. Raise both arms straight up toward the ceiling. Lift both legs so your knees are directly over your hips, bent at 90 degrees.",
-      "Press your lower back flat into the floor — keep it there the whole time.",
-      "Slowly lower your right arm overhead AND your left leg toward the floor at the same time.",
-      "Bring them back up, then switch sides. Lower back stays flat. Always."
-    ],
-    goalie: "This teaches your core to stay tight while your arms and legs move — exactly what happens when you're tracking a puck and dropping into butterfly."
+    steps: ["Lie on your back. Raise both arms straight up. Lift both legs so knees are over hips, bent at 90 degrees.", "Press your lower back flat into the floor - keep it there the whole time.", "Slowly lower your right arm overhead AND your left leg toward the floor at the same time.", "Bring them back up, then switch sides. Lower back stays flat. Always."],
+    goalie: "Teaches your core to stay tight while arms and legs move - exactly what happens when tracking a puck and dropping into butterfly."
   },
   "Side plank": {
-    steps: [
-      "Lie on your side. Place your forearm on the ground, elbow directly under your shoulder.",
-      "Stack your feet or stagger them for more stability.",
-      "Lift your hips off the ground so your body makes a straight diagonal line.",
-      "Hold. Don't let your hips sag. Breathe normally."
-    ],
-    goalie: "Builds the lateral core strength that keeps you stable in your stance and tight in your butterfly."
+    steps: ["Lie on your side. Place your forearm on the ground, elbow directly under your shoulder.", "Stack your feet or stagger them for more stability.", "Lift your hips off the ground so your body makes a straight diagonal line.", "Hold. Don't let your hips sag. Breathe normally."],
+    goalie: "Builds lateral core strength that keeps you stable in your stance and tight in your butterfly."
   },
   "Hollow body hold": {
-    steps: [
-      "Lie on your back. Press your lower back hard into the floor.",
-      "Extend your arms overhead and straighten your legs.",
-      "Lift your arms, shoulders, and legs slightly off the floor — maybe 6 inches.",
-      "Hold that position. If your lower back lifts off the floor, bend your knees to make it easier."
-    ],
-    goalie: "Looks simple, feels brutal. This is the foundation of every athletic movement — a locked, connected core."
+    steps: ["Lie on your back. Press your lower back hard into the floor.", "Extend your arms overhead and straighten your legs.", "Lift your arms, shoulders, and legs slightly off the floor - about 6 inches.", "Hold. If your lower back lifts off, bend your knees to make it easier."],
+    goalie: "Looks simple, feels brutal. This is the foundation of every athletic movement - a locked, connected core."
   },
   "Broad jump": {
-    steps: [
-      "Stand with feet shoulder-width apart. Bend your knees and swing your arms back.",
-      "Explode forward — jump as far as you can, swinging your arms forward for momentum.",
-      "Land with soft, bent knees. Absorb the landing quietly — no loud thud.",
-      "Reset and repeat. Distance matters, but landing control matters more."
-    ],
-    goalie: "Watch your knees on landing. They must track over your toes — not cave in. If they cave, slow down and do more single-leg work first."
+    steps: ["Stand with feet shoulder-width apart. Bend your knees and swing your arms back.", "Explode forward, swinging your arms forward for momentum.", "Land with soft, bent knees. Absorb the landing quietly.", "Reset and repeat."],
+    goalie: "Watch your knees on landing. They must track over your toes - not cave in. If they cave, slow down and do more single-leg work first."
   },
   "Lateral bound": {
-    steps: [
-      "Stand on your right foot, slight bend in the knee.",
-      "Push off your right foot and bound sideways to the left, landing on your left foot only.",
-      "Stick the landing and hold for a beat before jumping back.",
-      "That push-off is exactly how you drive out of a butterfly — same motion, same muscles."
-    ],
-    goalie: "This is the most goalie-specific exercise in the whole program. Every butterfly push-off starts with this exact movement."
+    steps: ["Stand on your right foot, slight bend in the knee.", "Push off your right foot and bound sideways to the left, landing on your left foot only.", "Stick the landing and hold for a beat before jumping back.", "That push-off is exactly how you drive out of a butterfly."],
+    goalie: "The most goalie-specific exercise in the whole program. Every butterfly push-off starts with this exact movement."
   },
   "Squat jump": {
-    steps: [
-      "Stand feet shoulder-width apart. Squat down to about parallel.",
-      "Explode straight up — jump as high as you can, arms swinging up for help.",
-      "Land softly with bent knees, immediately sinking back into your squat.",
-      "Don't pause at the bottom — use the energy and go again."
-    ],
+    steps: ["Stand feet shoulder-width apart. Squat down to about parallel.", "Explode straight up, arms swinging up for help.", "Land softly with bent knees, immediately sinking back into your squat.", "Don't pause at the bottom - use the energy and go again."],
     goalie: "Builds explosive leg power. The same pop you need to push across the crease in a split second."
   },
   "Bulgarian split squat": {
-    steps: [
-      "Stand about 2 feet in front of your couch. Place one foot behind you on the couch cushion, laces down.",
-      "Your front foot should be far enough forward that your shin stays vertical when you lower down.",
-      "Lower your back knee toward the floor by bending your front knee. Keep your chest tall.",
-      "Push through your front heel to come back up. Do all reps on one side, then switch."
-    ],
-    goalie: "The hardest exercise in this program. One leg does all the work — builds the single-leg strength that makes your recoveries explosive."
+    steps: ["Stand about 2 feet in front of your couch. Place one foot behind you on the couch cushion, laces down.", "Your front foot should be far enough forward that your shin stays vertical when you lower.", "Lower your back knee toward the floor by bending your front knee. Chest tall.", "Push through your front heel to come back up. All reps one side, then switch."],
+    goalie: "The hardest exercise in this program. One leg does all the work - builds single-leg strength that makes your recoveries explosive."
   },
   "Archer pushup": {
-    steps: [
-      "Start in a wide pushup position — hands much wider than normal.",
-      "Lower yourself toward your right hand while your left arm stays straight out to the side.",
-      "Push back to center, then lower toward your left hand while your right arm stays straight.",
-      "That's one rep each side. It's hard — go slow."
-    ],
-    goalie: "Builds serious shoulder and chest strength. Good for when you're fighting for position in the crease."
+    steps: ["Start in a wide pushup position - hands much wider than normal.", "Lower yourself toward your right hand while your left arm stays straight out to the side.", "Push back to center, then lower toward your left hand while your right arm stays straight.", "That is one rep each side. Go slow."],
+    goalie: "Builds serious shoulder and chest strength. Good for when you are fighting for position in the crease."
   },
   "Hip thrust": {
-    steps: [
-      "Sit on the floor with your upper back against the couch cushion edge. Feet flat on the floor, knees bent.",
-      "Drive through your heels and thrust your hips up toward the ceiling. Squeeze your glutes hard at the top.",
-      "Your body makes a straight line from knees to shoulders at the top.",
-      "Lower slowly and repeat. Don't drop — control it."
-    ],
-    goalie: "The glute exercise. More range of motion than a bridge. If you do one thing for your butterfly push-off strength, it's this."
+    steps: ["Sit on the floor with your upper back against the couch cushion edge. Feet flat on the floor, knees bent.", "Drive through your heels and thrust your hips up toward the ceiling. Squeeze your glutes hard at the top.", "Your body makes a straight line from knees to shoulders at the top.", "Lower slowly and repeat."],
+    goalie: "The glute exercise. More range of motion than a bridge. If you do one thing for your butterfly push-off strength, it is this."
   },
   "Pike pushup": {
-    steps: [
-      "Start in a downward dog position — hips high, forming an upside-down V.",
-      "Bend your elbows and lower the top of your head toward the floor between your hands.",
-      "Press back up to the starting V shape.",
-      "Keep your elbows from flaring out too wide."
-    ],
-    goalie: "Targets your shoulders directly. Goalies take a beating in the shoulders — this keeps them strong and stable."
+    steps: ["Start in a downward dog position - hips high, forming an upside-down V.", "Bend your elbows and lower the top of your head toward the floor between your hands.", "Press back up to the starting V shape.", "Keep your elbows from flaring out too wide."],
+    goalie: "Targets your shoulders directly. Goalies take a beating in the shoulders - this keeps them strong and stable."
   },
   "Copenhagen plank": {
-    steps: [
-      "Lie on your side. Place your top foot on the edge of the couch or a low step.",
-      "Lift your hips off the floor like a side plank, but your top foot is doing the work on the couch.",
-      "Your bottom leg can hang free or rest lightly on the floor.",
-      "Hold. This will burn in your inner thigh. That's the point."
-    ],
-    goalie: "Builds groin and inner thigh strength — the muscles that control your butterfly and stop it from being too wide. Essential for goalies."
+    steps: ["Lie on your side. Place your top foot on the edge of the couch or a low step.", "Lift your hips off the floor like a side plank, but your top foot is doing the work on the couch.", "Your bottom leg can hang free or rest lightly on the floor.", "Hold. This will burn in your inner thigh. That is the point."],
+    goalie: "Builds groin and inner thigh strength - the muscles that control your butterfly and stop it from being too wide. Essential for goalies."
   },
   "Pallof hold": {
-    steps: [
-      "Tie a resistance band or towel around a fence post at chest height. Stand sideways to the anchor point.",
-      "Hold the end of the band/towel with both hands at your chest.",
-      "Press your hands straight out in front of you and hold. The band will try to rotate you — resist it.",
-      "Hold for the time, then switch sides. Stand tall, core tight."
-    ],
-    goalie: "Trains your core to resist rotation — exactly what happens when a puck deflects and your body has to stay square to the shooter."
+    steps: ["Tie a resistance band or towel around a fence post at chest height. Stand sideways to the anchor point.", "Hold the end with both hands at your chest.", "Press your hands straight out in front of you and hold. The band will try to rotate you - resist it.", "Hold for the time, then switch sides. Stand tall, core tight."],
+    goalie: "Trains your core to resist rotation - exactly what happens when a puck deflects and your body has to stay square to the shooter."
   },
   "Single-leg hop": {
-    steps: [
-      "Stand on one foot, slight bend in the knee.",
-      "Hop forward, backward, or sideways — your call. Land on the same foot.",
-      "Stick the landing for a full 2 seconds before the next hop. Don't rush.",
-      "If your knee wobbles on landing, slow down and focus on the stick."
-    ],
-    goalie: "The landing is the whole point. Trains your body to absorb force on one leg — crucial for post integration and kick saves."
+    steps: ["Stand on one foot, slight bend in the knee.", "Hop forward, backward, or sideways. Land on the same foot.", "Stick the landing for a full 2 seconds before the next hop.", "If your knee wobbles on landing, slow down and focus on the stick."],
+    goalie: "The landing is the whole point. Trains your body to absorb force on one leg - crucial for post integration and kick saves."
   },
   "Intervals": {
-    steps: [
-      "Find a flat stretch of road, sidewalk, or grass.",
-      "Walk easy for 3 minutes to warm up.",
-      "Go hard for the work interval — not a full sprint, about 80% effort. Like you're chasing down a loose puck.",
-      "Walk slowly to recover. Repeat for the number of rounds listed."
-    ],
-    goalie: "Goalies need burst capacity — short hard efforts with recovery in between. This is exactly that. Distance doesn't matter, effort does."
+    steps: ["Find a flat stretch of road, sidewalk, or grass.", "Walk easy for 3 minutes to warm up.", "Go hard for the work interval - about 80% effort. Like chasing down a loose puck.", "Walk slowly to recover. Repeat for the number of rounds listed."],
+    goalie: "Goalies need burst capacity - short hard efforts with recovery in between. This is exactly that."
   },
-  "Walk": { steps: ["Easy walking pace. This is recovery, not exercise.","Let your heart rate come down.","Shake out your legs.",""], goalie: "" },
-  "Cool down walk": { steps: ["Slow walk for 3 minutes.","Let your breathing settle.","Shake out your legs and arms.",""], goalie: "" },
   "Hip flexor stretch": {
-    steps: [
-      "Step one foot forward into a lunge position. Lower your back knee to the ground.",
-      "Shift your hips forward gently until you feel a stretch in the front of your back hip.",
-      "Keep your chest tall — don't lean forward.",
-      "Hold 30 seconds. Switch sides."
-    ],
+    steps: ["Step one foot forward into a lunge position. Lower your back knee to the ground.", "Shift your hips forward gently until you feel a stretch in the front of your back hip.", "Keep your chest tall.", "Hold 30 seconds. Switch sides."],
     goalie: "Goalies spend a lot of time in a crouch which tightens hip flexors. This keeps them loose so your butterfly is clean."
   },
   "Quad stretch": {
-    steps: [
-      "Stand on one foot. You can hold a wall for balance.",
-      "Bend your other knee and grab your ankle behind you.",
-      "Pull your heel toward your backside. Keep your knees together.",
-      "Hold 30 seconds. Switch sides."
-    ],
+    steps: ["Stand on one foot. Hold a wall for balance.", "Bend your other knee and grab your ankle behind you.", "Pull your heel toward your backside. Keep your knees together.", "Hold 30 seconds. Switch sides."],
     goalie: "After jump work your quads will be tight. This keeps them flexible."
   },
   "Glute stretch": {
-    steps: [
-      "Lie on your back, knees bent.",
-      "Cross your right ankle over your left knee — like a figure-4.",
-      "Either stay here or pull your left knee toward your chest to deepen it.",
-      "Hold 30 seconds. You should feel it deep in your right hip. Switch sides."
-    ],
+    steps: ["Lie on your back, knees bent.", "Cross your right ankle over your left knee - like a figure-4.", "Either stay here or pull your left knee toward your chest to deepen it.", "Hold 30 seconds. Feel it deep in your right hip. Switch sides."],
     goalie: "The hip muscles that control your butterfly get tight fast. This is the best stretch for them."
-  },
+  }
 };
 
-const data = {
+var data = {
   1: {
     phase: "Phase 1: Foundation", sub: "3 days/week · 45 min",
     days: [
-      { label: "Day 1 — strength",
-        warmup: [["Jog in place","2 min","Get the legs warm"],["Leg swings","10 each side","Front to back, then side to side"],["Hip circles","10 each direction","Big slow circles"],["Lateral shuffles","30 sec","Stay low, feet don't cross"]],
-        main: [["Bodyweight squat","3 sets × 15 reps","Sit back, knees track over toes"],["Glute bridge","3 sets × 12 reps","Squeeze at the top for 1 sec"],["Lateral lunge","3 sets × 8 each side","Chest up, push through the heel"],["Pushup","3 sets × 10 reps","Full body plank — don't let hips sag"]],
-        core: [["Dead bug","3 sets × 6 each side","Lower back stays flat on floor"],["Side plank","3 sets × 30 sec each","Stack feet or stagger them"]]
+      { warmup: [["Jog in place","2 min","Get the legs warm"],["Leg swings","10 each side","Front to back, then side to side"],["Hip circles","10 each direction","Big slow circles"],["Lateral shuffles","30 sec","Stay low, feet don't cross"]],
+        main: [["Bodyweight squat","3 sets x 15 reps","Sit back, knees track over toes"],["Glute bridge","3 sets x 12 reps","Squeeze at the top for 1 sec"],["Lateral lunge","3 sets x 8 each side","Chest up, push through the heel"],["Pushup","3 sets x 10 reps","Full body plank - don't let hips sag"]],
+        core: [["Dead bug","3 sets x 6 each side","Lower back stays flat on floor"],["Side plank","3 sets x 30 sec each","Stack feet or stagger them"]]
       },
-      { label: "Day 2 — power",
-        warmup: [["Jog in place","2 min",""],["High knees","30 sec","Drive knees up, pump arms"],["Leg swings","10 each side",""],["Lateral shuffles","30 sec","Stay low"]],
-        main: [["Broad jump","3 sets × 5 reps","Land soft — absorb with your legs"],["Lateral bound","3 sets × 6 each side","Mimic butterfly push-off"],["Reverse lunge","3 sets × 10 each side","Back knee hovers just off the floor"],["Pushup","3 sets × 10 reps",""]],
-        core: [["Dead bug","3 sets × 6 each side",""],["Hollow body hold","3 sets × 20 sec","Arms overhead, lower back flat"]]
+      { warmup: [["Jog in place","2 min",""],["High knees","30 sec","Drive knees up, pump arms"],["Leg swings","10 each side",""],["Lateral shuffles","30 sec","Stay low"]],
+        main: [["Broad jump","3 sets x 5 reps","Land soft - absorb with your legs"],["Lateral bound","3 sets x 6 each side","Mimic butterfly push-off"],["Reverse lunge","3 sets x 10 each side","Back knee hovers just off the floor"],["Pushup","3 sets x 10 reps",""]],
+        core: [["Dead bug","3 sets x 6 each side",""],["Hollow body hold","3 sets x 20 sec","Arms overhead, lower back flat"]]
       },
-      { label: "Run day",
-        warmup: [["Walk","3 min easy","Loosen up"]],
-        main: [["Intervals","30 sec hard / 90 sec walk × 8 rounds","Hard = 80% effort, not a sprint"]],
+      { warmup: [["Walk","3 min easy","Loosen up"]],
+        main: [["Intervals","30 sec hard / 90 sec walk x 8 rounds","Hard = 80% effort, not a sprint"]],
         core: [["Cool down walk","3 min","Shake it out"],["Hip flexor stretch","30 sec each side","Lunge position, sink into it"],["Quad stretch","30 sec each side",""]]
       }
     ]
@@ -395,19 +308,16 @@ const data = {
   3: {
     phase: "Phase 2: Building", sub: "3 days/week · 45 min",
     days: [
-      { label: "Day 1 — strength",
-        warmup: [["Jog in place","2 min",""],["Leg swings","10 each side",""],["Hip circles","10 each direction",""],["Lateral shuffles","30 sec",""]],
-        main: [["Bodyweight squat","3 sets × 18 reps","Add a backpack with books if easy"],["Glute bridge","3 sets × 15 reps","Try single-leg if ready"],["Lateral lunge","3 sets × 10 each side",""],["Bulgarian split squat","3 sets × 8 each side","Rear foot on couch, front foot forward"],["Pushup","3 sets × 12 reps",""]],
-        core: [["Dead bug","3 sets × 8 each side",""],["Side plank","3 sets × 40 sec each",""],["Copenhagen plank","2 sets × 15 sec each","Side plank, top foot on couch edge — tough!"]]
+      { warmup: [["Jog in place","2 min",""],["Leg swings","10 each side",""],["Hip circles","10 each direction",""],["Lateral shuffles","30 sec",""]],
+        main: [["Bodyweight squat","3 sets x 18 reps","Add a backpack with books if easy"],["Glute bridge","3 sets x 15 reps","Try single-leg if ready"],["Lateral lunge","3 sets x 10 each side",""],["Bulgarian split squat","3 sets x 8 each side","Rear foot on couch, front foot forward"],["Pushup","3 sets x 12 reps",""]],
+        core: [["Dead bug","3 sets x 8 each side",""],["Side plank","3 sets x 40 sec each",""],["Copenhagen plank","2 sets x 15 sec each","Side plank, top foot on couch edge - tough!"]]
       },
-      { label: "Day 2 — power",
-        warmup: [["Jog in place","2 min",""],["High knees","30 sec",""],["Leg swings","10 each side",""],["Lateral shuffles","30 sec",""]],
-        main: [["Broad jump","3 sets × 6 reps","Land soft"],["Lateral bound","3 sets × 8 each side",""],["Squat jump","3 sets × 8 reps","Explode up, land with bent knees"],["Reverse lunge","3 sets × 12 each side",""],["Archer pushup","3 sets × 6 each side","One arm bends, one stays straight"]],
-        core: [["Dead bug","3 sets × 8 each side",""],["Hollow body hold","3 sets × 30 sec",""]]
+      { warmup: [["Jog in place","2 min",""],["High knees","30 sec",""],["Leg swings","10 each side",""],["Lateral shuffles","30 sec",""]],
+        main: [["Broad jump","3 sets x 6 reps","Land soft"],["Lateral bound","3 sets x 8 each side",""],["Squat jump","3 sets x 8 reps","Explode up, land with bent knees"],["Reverse lunge","3 sets x 12 each side",""],["Archer pushup","3 sets x 6 each side","One arm bends, one stays straight"]],
+        core: [["Dead bug","3 sets x 8 each side",""],["Hollow body hold","3 sets x 30 sec",""]]
       },
-      { label: "Run day",
-        warmup: [["Walk","3 min easy",""]],
-        main: [["Intervals","40 sec hard / 60 sec walk × 8 rounds","Harder ratio — keep pushing"]],
+      { warmup: [["Walk","3 min easy",""]],
+        main: [["Intervals","40 sec hard / 60 sec walk x 8 rounds","Harder ratio - keep pushing"]],
         core: [["Cool down walk","3 min",""],["Hip flexor stretch","30 sec each side",""],["Glute stretch","30 sec each side","Figure-4 on the ground"]]
       }
     ]
@@ -415,19 +325,16 @@ const data = {
   5: {
     phase: "Phase 3: Power", sub: "3 days/week · 45 min",
     days: [
-      { label: "Day 1 — strength",
-        warmup: [["Jog","3 min",""],["Leg swings","10 each side",""],["Hip circles","10 each direction",""],["Lateral shuffles","30 sec",""]],
-        main: [["Bulgarian split squat","4 sets × 10 each side","Add backpack if bodyweight is easy"],["Single-leg glute bridge","3 sets × 12 each side","Full extension at top"],["Lateral lunge","3 sets × 12 each side",""],["Hip thrust","3 sets × 15 reps","Shoulders on couch, drive hips up"],["Pike pushup","3 sets × 10 reps","Good for goalie shoulder stability"]],
-        core: [["Dead bug","3 sets × 10 each side",""],["Copenhagen plank","3 sets × 20 sec each",""],["Pallof hold","3 sets × 20 sec each side","Anchor a towel to a fence, press and hold"]]
+      { warmup: [["Jog","3 min",""],["Leg swings","10 each side",""],["Hip circles","10 each direction",""],["Lateral shuffles","30 sec",""]],
+        main: [["Bulgarian split squat","4 sets x 10 each side","Add backpack if bodyweight is easy"],["Single-leg glute bridge","3 sets x 12 each side","Full extension at top"],["Lateral lunge","3 sets x 12 each side",""],["Hip thrust","3 sets x 15 reps","Shoulders on couch, drive hips up"],["Pike pushup","3 sets x 10 reps","Good for goalie shoulder stability"]],
+        core: [["Dead bug","3 sets x 10 each side",""],["Copenhagen plank","3 sets x 20 sec each",""],["Pallof hold","3 sets x 20 sec each side","Anchor a towel to a fence, press and hold"]]
       },
-      { label: "Day 2 — power",
-        warmup: [["Jog","3 min",""],["High knees","30 sec",""],["Leg swings","10 each side",""],["Lateral shuffles","30 sec",""]],
-        main: [["Broad jump","3 sets × 6 reps","Land soft, check knee alignment"],["Lateral bound","4 sets × 8 each side",""],["Squat jump","3 sets × 10 reps",""],["Single-leg hop","3 sets × 6 each side","Stick the landing for 2 sec"],["Archer pushup","3 sets × 8 each side",""]],
-        core: [["Dead bug","3 sets × 10 each side",""],["Hollow body hold","3 sets × 40 sec",""]]
+      { warmup: [["Jog","3 min",""],["High knees","30 sec",""],["Leg swings","10 each side",""],["Lateral shuffles","30 sec",""]],
+        main: [["Broad jump","3 sets x 6 reps","Land soft, check knee alignment"],["Lateral bound","4 sets x 8 each side",""],["Squat jump","3 sets x 10 reps",""],["Single-leg hop","3 sets x 6 each side","Stick the landing for 2 sec"],["Archer pushup","3 sets x 8 each side",""]],
+        core: [["Dead bug","3 sets x 10 each side",""],["Hollow body hold","3 sets x 40 sec",""]]
       },
-      { label: "Run day",
-        warmup: [["Walk","3 min",""]],
-        main: [["Intervals","45 sec hard / 45 sec walk × 10 rounds","1:1 ratio — you're ready for it"]],
+      { warmup: [["Walk","3 min",""]],
+        main: [["Intervals","45 sec hard / 45 sec walk x 10 rounds","1:1 ratio - you are ready for it"]],
         core: [["Cool down walk","3 min",""],["Hip flexor stretch","30 sec each side",""],["Glute stretch","30 sec each side",""]]
       }
     ]
@@ -435,113 +342,153 @@ const data = {
   7: {
     phase: "Phase 4: Game Shape", sub: "3 days/week · 45 min",
     days: [
-      { label: "Day 1 — full strength",
-        warmup: [["Jog","3 min",""],["Leg swings","10 each side",""],["Hip circles","10 each direction",""],["Lateral shuffles","30 sec",""]],
-        main: [["Bulgarian split squat","4 sets × 12 each side","Backpack on — push yourself"],["Single-leg glute bridge","4 sets × 12 each side",""],["Hip thrust","4 sets × 15 reps",""],["Lateral lunge","3 sets × 12 each side",""],["Archer pushup","3 sets × 10 each side",""],["Pike pushup","3 sets × 12 reps",""]],
-        core: [["Copenhagen plank","3 sets × 25 sec each",""],["Dead bug","3 sets × 10 each side",""],["Pallof hold","3 sets × 25 sec each side",""]]
+      { warmup: [["Jog","3 min",""],["Leg swings","10 each side",""],["Hip circles","10 each direction",""],["Lateral shuffles","30 sec",""]],
+        main: [["Bulgarian split squat","4 sets x 12 each side","Backpack on - push yourself"],["Single-leg glute bridge","4 sets x 12 each side",""],["Hip thrust","4 sets x 15 reps",""],["Lateral lunge","3 sets x 12 each side",""],["Archer pushup","3 sets x 10 each side",""],["Pike pushup","3 sets x 12 reps",""]],
+        core: [["Copenhagen plank","3 sets x 25 sec each",""],["Dead bug","3 sets x 10 each side",""],["Pallof hold","3 sets x 25 sec each side",""]]
       },
-      { label: "Day 2 — full power",
-        warmup: [["Jog","3 min",""],["High knees","30 sec",""],["Leg swings","10 each side",""],["Lateral shuffles","30 sec",""]],
-        main: [["Broad jump","4 sets × 6 reps",""],["Lateral bound","4 sets × 10 each side",""],["Squat jump","4 sets × 10 reps",""],["Single-leg hop","3 sets × 8 each side","Stick it, hold 2 sec"],["Archer pushup","3 sets × 10 each side",""]],
-        core: [["Hollow body hold","3 sets × 45 sec",""],["Copenhagen plank","3 sets × 25 sec each",""]]
+      { warmup: [["Jog","3 min",""],["High knees","30 sec",""],["Leg swings","10 each side",""],["Lateral shuffles","30 sec",""]],
+        main: [["Broad jump","4 sets x 6 reps",""],["Lateral bound","4 sets x 10 each side",""],["Squat jump","4 sets x 10 reps",""],["Single-leg hop","3 sets x 8 each side","Stick it, hold 2 sec"],["Archer pushup","3 sets x 10 each side",""]],
+        core: [["Hollow body hold","3 sets x 45 sec",""],["Copenhagen plank","3 sets x 25 sec each",""]]
       },
-      { label: "Run day",
-        warmup: [["Walk","3 min",""]],
-        main: [["Intervals","45 sec hard / 45 sec walk × 12 rounds","Same ratio, more volume — you've earned it"]],
+      { warmup: [["Walk","3 min",""]],
+        main: [["Intervals","45 sec hard / 45 sec walk x 12 rounds","Same ratio, more volume - you have earned it"]],
         core: [["Cool down walk","3 min",""],["Hip flexor stretch","30 sec each side",""],["Glute stretch","30 sec each side",""]]
       }
     ]
   }
 };
 
-let currentWeek = 1, currentDay = 0;
-let checked = {};
-try { checked = JSON.parse(localStorage.getItem('goalie_checked') || '{}'); } catch(e) {}
-function save() { try { localStorage.setItem('goalie_checked', JSON.stringify(checked)); } catch(e) {} }
-function getKey() { return `w${currentWeek}d${currentDay}`; }
+var currentWeek = 1;
+var currentDay = 0;
+var checked = {};
+try { checked = JSON.parse(localStorage.getItem('goalie_v2') || '{}'); } catch(e) {}
+
+function save() {
+  try { localStorage.setItem('goalie_v2', JSON.stringify(checked)); } catch(e) {}
+}
+
+function getKey() { return 'w' + currentWeek + 'd' + currentDay; }
 
 function setWeek(w) {
   currentWeek = w;
-  document.querySelectorAll('.week-tab').forEach((t,i) => t.classList.toggle('active', [1,3,5,7][i]===w));
+  document.querySelectorAll('.week-tab').forEach(function(t, i) {
+    t.classList.toggle('active', [1,3,5,7][i] === w);
+  });
   renderDay();
 }
+
 function setDay(d) {
   currentDay = d;
-  document.querySelectorAll('.day-tab').forEach((t,i) => t.classList.toggle('active', i===d));
+  document.querySelectorAll('.day-tab').forEach(function(t, i) {
+    t.classList.toggle('active', i === d);
+  });
   renderDay();
 }
-function toggle(key, idx) {
-  checked[key+'_'+idx] = !checked[key+'_'+idx];
-  save(); renderDay();
+
+function toggle(key, idx, sType) {
+  var wasChecked = checked[key + '_' + idx];
+  checked[key + '_' + idx] = !wasChecked;
+  save();
+  if (!wasChecked && sType !== 'warmup' && sType !== 'run') {
+    var secs = restTimes[sType] || 60;
+    startRest(secs);
+  } else {
+    skipRest();
+  }
+  renderDay();
 }
+
 function resetDay() {
-  const key = getKey();
-  Object.keys(checked).forEach(k => { if(k.startsWith(key)) delete checked[k]; });
-  save(); renderDay();
+  var key = getKey();
+  Object.keys(checked).forEach(function(k) {
+    if (k.indexOf(key) === 0) delete checked[k];
+  });
+  skipRest();
+  save();
+  renderDay();
 }
 
 function openHow(name, detail) {
-  const info = howTo[name];
+  var info = howTo[name];
   if (!info) return;
   document.getElementById('modal-name').textContent = name;
   document.getElementById('modal-detail').textContent = detail;
-  const stepsEl = document.getElementById('modal-steps');
-  stepsEl.innerHTML = info.steps.filter(s=>s).map((s,i) =>
-    `<li><span class="num">${i+1}</span><span>${s}</span></li>`).join('');
-  const goalieEl = document.getElementById('modal-goalie');
+  document.getElementById('modal-steps').innerHTML = info.steps.map(function(s, i) {
+    return '<li><span class="num">' + (i+1) + '</span><span>' + s + '</span></li>';
+  }).join('');
+  var goalieEl = document.getElementById('modal-goalie');
   if (info.goalie) {
     goalieEl.style.display = 'block';
-    goalieEl.innerHTML = `<strong>🏒 Goalie note:</strong> ${info.goalie}`;
+    goalieEl.innerHTML = '<strong>Goalie note:</strong> ' + info.goalie;
   } else {
     goalieEl.style.display = 'none';
   }
   document.getElementById('modal-overlay').classList.add('open');
 }
-function closeModal(e) {
-  if (e.target === document.getElementById('modal-overlay')) closeModalDirect();
+
+function closeModalOutside(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
 }
-function closeModalDirect() {
+
+function closeModal() {
   document.getElementById('modal-overlay').classList.remove('open');
 }
 
 function renderDay() {
-  const week = data[currentWeek];
-  const day = week.days[currentDay];
+  var week = data[currentWeek];
+  var day = week.days[currentDay];
   document.getElementById('phase-badge').textContent = week.phase;
   document.getElementById('header-sub').textContent = week.sub;
-  const key = getKey();
-  const all = [...(day.warmup||[]), ...(day.main||[]), ...(day.core||[])];
-  const total = all.length;
-  const done = all.filter((_,i) => checked[key+'_'+i]).length;
-  document.getElementById('progress-text').textContent = `${done} of ${total} done`;
-  document.getElementById('progress-fill').style.width = (total ? Math.round(done/total*100) : 0)+'%';
-  document.getElementById('confetti').classList.toggle('show', done===total && total>0);
 
-  let html = '', idx = 0;
-  function section(label, exs) {
-    if(!exs||!exs.length) return;
-    html += `<div class="section-label">${label}</div>`;
-    exs.forEach(([name,detail,tip]) => {
-      const i = idx++;
-      const isDone = checked[key+'_'+i];
-      const hasHow = !!howTo[name];
-      html += `<div class="ex-card${isDone?' done':''}">
-        <div class="check" onclick="toggle('${key}',${i})"><span class="check-icon">✓</span></div>
-        <div class="ex-info">
-          <div class="ex-name">${name}</div>
-          <div class="ex-detail">${detail}</div>
-          ${tip?`<div class="ex-tip">${tip}</div>`:''}
-          ${hasHow?`<button class="how-btn" onclick="openHow('${name.replace(/'/g,"\\'")}','${detail.replace(/'/g,"\\'")}')">▶ how to</button>`:''}
-        </div>
-      </div>`;
+  var key = getKey();
+  var all = (day.warmup || []).concat(day.main || []).concat(day.core || []);
+  var total = all.length;
+  var done = all.filter(function(_, i) { return checked[key + '_' + i]; }).length;
+  document.getElementById('progress-text').textContent = done + ' of ' + total + ' done';
+  document.getElementById('progress-fill').style.width = (total ? Math.round(done/total*100) : 0) + '%';
+  document.getElementById('confetti').classList.toggle('show', done === total && total > 0);
+
+  var html = '';
+  var idx = 0;
+
+  function section(label, exs, sType) {
+    if (!exs || !exs.length) return;
+    var restSec = restTimes[sType] || 0;
+    var restLabel = (sType !== 'warmup' && sType !== 'run' && restSec > 0) ? (' · ' + restSec + 's rest') : '';
+    html += '<div class="section-label">' + label + '<span class="section-rest">' + restLabel + '</span></div>';
+    exs.forEach(function(ex) {
+      var i = idx++;
+      var isDone = checked[key + '_' + i];
+      var name = ex[0];
+      var detail = ex[1];
+      var tip = ex[2];
+      var hasHow = !!howTo[name];
+      var safeName = name.replace(/'/g, "\\'");
+      var safeDetail = detail.replace(/'/g, "\\'");
+      html += '<div class="ex-card' + (isDone ? ' done' : '') + '">';
+      html += '<div class="check" onclick="toggle(\'' + key + '\',' + i + ',\'' + sType + '\')"><span class="check-icon">&#10003;</span></div>';
+      html += '<div class="ex-info">';
+      html += '<div class="ex-name">' + name + '</div>';
+      html += '<div class="ex-detail">' + detail + '</div>';
+      if (tip) html += '<div class="ex-tip">' + tip + '</div>';
+      html += '<div class="btn-row">';
+      if (hasHow) html += '<button class="how-btn" onclick="openHow(\'' + safeName + '\',\'' + safeDetail + '\')">&#9654; how to</button>';
+      if (sType !== 'warmup' && sType !== 'run' && restSec > 0) {
+        html += '<button class="rest-btn" onclick="startRest(' + restSec + ')">&#9201; ' + restSec + 's rest</button>';
+      }
+      html += '</div></div></div>';
     });
   }
-  section('warmup', day.warmup);
-  section('main work', day.main);
-  section('core / cooldown', day.core);
+
+  section('warmup', day.warmup, 'warmup');
+  section('main work', day.main, currentDay === 2 ? 'run' : 'main');
+  section('core / cooldown', day.core, currentDay === 2 ? 'warmup' : 'core');
+
   document.getElementById('exercise-list').innerHTML = html;
 }
+
 renderDay();
+
 </script>
 </body>
 </html>
