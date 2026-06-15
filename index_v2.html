@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Goalie Training Program</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f3; color: #2C2C2A; min-height: 100vh; }
+.app { max-width: 480px; margin: 0 auto; padding: 0 0 2rem; }
+.header { background: #1a5f7a; color: white; padding: 1.25rem 1rem 1rem; text-align: center; }
+.header h1 { font-size: 20px; font-weight: 600; }
+.header p { font-size: 12px; opacity: 0.8; margin-top: 3px; }
+.phase-badge { display: inline-block; background: rgba(255,255,255,0.2); color: white; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; margin-bottom: 8px; letter-spacing: 0.03em; }
+.tabs-wrap { background: white; border-bottom: 1px solid #e0e0dc; padding: 10px 12px 0; position: sticky; top: 0; z-index: 10; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+.week-tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
+.week-tabs::-webkit-scrollbar { display: none; }
+.week-tab { flex-shrink: 0; padding: 5px 12px; border-radius: 20px; border: 1.5px solid #D3D1C7; background: white; color: #888780; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+.week-tab.active { background: #1a5f7a; color: white; border-color: #1a5f7a; }
+.day-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; padding: 10px 12px; background: white; border-bottom: 1px solid #e0e0dc; }
+.day-tab { padding: 8px 4px; border-radius: 8px; border: 1px solid #D3D1C7; background: white; color: #888780; font-size: 12px; font-weight: 500; cursor: pointer; text-align: center; transition: all 0.15s; }
+.day-tab.active { background: #e8f4f8; color: #1a5f7a; border-color: #1a5f7a; font-weight: 600; }
+.progress-wrap { padding: 10px 14px 0; }
+.progress-text { font-size: 12px; color: #888780; margin-bottom: 5px; }
+.progress-bar { height: 5px; background: #e0e0dc; border-radius: 3px; overflow: hidden; }
+.progress-fill { height: 100%; background: #3B6D11; border-radius: 3px; transition: width 0.3s; }
+.content { padding: 0 12px; }
+.section-label { font-size: 10px; font-weight: 700; color: #888780; text-transform: uppercase; letter-spacing: 0.07em; margin: 14px 0 6px; }
+.ex-card { background: white; border: 1px solid #e8e8e4; border-radius: 10px; padding: 11px 12px; margin-bottom: 6px; display: flex; align-items: flex-start; gap: 10px; transition: all 0.15s; -webkit-tap-highlight-color: transparent; }
+.ex-card.done { opacity: 0.45; }
+.ex-card.done .check { background: #3B6D11; border-color: #3B6D11; }
+.ex-card.done .check-icon { opacity: 1; }
+.check { width: 22px; height: 22px; min-width: 22px; border-radius: 50%; border: 2px solid #D3D1C7; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.2s; cursor: pointer; margin-top: 1px; }
+.check-icon { opacity: 0; color: white; font-size: 13px; line-height: 1; transition: opacity 0.15s; }
+.ex-info { flex: 1; min-width: 0; }
+.ex-name { font-size: 14px; font-weight: 600; color: #2C2C2A; }
+.ex-detail { font-size: 12px; color: #888780; margin-top: 1px; }
+.ex-tip { font-size: 11px; color: #0F6E56; margin-top: 3px; font-style: italic; }
+.how-btn { display: inline-block; margin-top: 5px; padding: 3px 9px; border-radius: 20px; border: 1px solid #1a5f7a; background: #e8f4f8; color: #1a5f7a; font-size: 11px; font-weight: 500; text-decoration: none; cursor: pointer; white-space: nowrap; }
+.how-btn:hover { background: #d0eaf5; }
+.reset-btn { display: block; width: calc(100% - 24px); margin: 14px 12px 0; padding: 11px; border-radius: 10px; border: 1px solid #D3D1C7; background: white; color: #888780; font-size: 13px; cursor: pointer; text-align: center; }
+.reset-btn:active { background: #f5f5f3; }
+.confetti-wrap { text-align: center; padding: 1.5rem 1rem; display: none; }
+.confetti-wrap.show { display: block; }
+.confetti-wrap p { font-size: 15px; font-weight: 600; color: #1a5f7a; }
+.confetti-wrap span { font-size: 36px; display: block; margin-bottom: 8px; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div class="phase-badge" id="phase-badge">Phase 1: Foundation</div>
+    <h1>Goalie Training 🏒</h1>
+    <p id="header-sub">3 days/week · 45 min per session</p>
+  </div>
+
+  <div class="tabs-wrap">
+    <div class="week-tabs">
+      <button class="week-tab active" onclick="setWeek(1)">Week 1–2</button>
+      <button class="week-tab" onclick="setWeek(3)">Week 3–4</button>
+      <button class="week-tab" onclick="setWeek(5)">Week 5–6</button>
+      <button class="week-tab" onclick="setWeek(7)">Week 7–8</button>
+    </div>
+  </div>
+
+  <div class="day-tabs">
+    <button class="day-tab active" onclick="setDay(0)">Day 1</button>
+    <button class="day-tab" onclick="setDay(1)">Day 2</button>
+    <button class="day-tab" onclick="setDay(2)">Run day</button>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-text" id="progress-text">0 of 0 done</div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+  </div>
+
+  <div class="content">
+    <div id="exercise-list"></div>
+    <div class="confetti-wrap" id="confetti">
+      <span>🎉</span>
+      <p>Session complete. Get off the ice.</p>
+    </div>
+    <button class="reset-btn" onclick="resetDay()">↺ Reset day</button>
+  </div>
+</div>
+
+<script>
+const links = {
+  "Jog in place": "https://www.verywellfit.com/how-to-jog-in-place-5200866",
+  "Leg swings": "https://www.acefitness.org/resources/everyone/exercise-library/211/standing-hip-flexor-stretch/",
+  "Hip circles": "https://www.verywellfit.com/hip-circles-exercise-4584092",
+  "Lateral shuffles": "https://www.verywellfit.com/lateral-shuffle-exercise-4842382",
+  "High knees": "https://www.acefitness.org/resources/everyone/exercise-library/251/high-knee-march-in-place/",
+  "Bodyweight squat": "https://www.acefitness.org/resources/everyone/exercise-library/135/bodyweight-squat/",
+  "Glute bridge": "https://www.acefitness.org/resources/everyone/exercise-library/49/glute-bridge/",
+  "Lateral lunge": "https://www.acefitness.org/resources/everyone/exercise-library/364/lateral-lunge/",
+  "Pushup": "https://www.acefitness.org/resources/everyone/exercise-library/41/push-up/",
+  "Reverse lunge": "https://www.acefitness.org/resources/everyone/exercise-library/319/reverse-lunge/",
+  "Dead bug": "https://www.acefitness.org/resources/everyone/exercise-library/147/supine-dead-bug/",
+  "Side plank": "https://www.acefitness.org/resources/everyone/exercise-library/100/side-plank-modified/",
+  "Hollow body hold": "https://www.verywellfit.com/how-to-do-the-hollow-body-hold-4770360",
+  "Broad jump": "https://www.verywellfit.com/standing-broad-jump-exercise-4589674",
+  "Lateral bound": "https://www.verywellfit.com/lateral-bound-exercise-4846526",
+  "Squat jump": "https://www.acefitness.org/resources/everyone/exercise-library/116/squat-jumps/",
+  "Bulgarian split squat": "https://www.acefitness.org/resources/everyone/exercise-library/366/bulgarian-split-squat/",
+  "Archer pushup": "https://www.verywellfit.com/how-to-do-archer-push-ups-4799517",
+  "Single-leg glute bridge": "https://www.acefitness.org/resources/everyone/exercise-library/145/glute-bridge-single-leg-progression/",
+  "Hip thrust": "https://www.verywellfit.com/how-to-do-a-hip-thrust-5213072",
+  "Pike pushup": "https://www.verywellfit.com/pike-push-up-exercise-4588013",
+  "Copenhagen plank": "https://www.verywellfit.com/copenhagen-plank-exercise-5218455",
+  "Pallof hold": "https://www.verywellfit.com/pallof-press-exercise-4783062",
+  "Single-leg hop": "https://www.verywellfit.com/single-leg-hop-exercise-4846574",
+  "Cool down walk": null,
+  "Hip flexor stretch": "https://www.acefitness.org/resources/everyone/exercise-library/211/standing-hip-flexor-stretch/",
+  "Quad stretch": "https://www.verywellfit.com/how-to-stretch-your-quadriceps-3120452",
+  "Glute stretch": "https://www.verywellfit.com/figure-four-stretch-4584085",
+  "Walk": null,
+  "Intervals": null,
+  "Jog": "https://www.verywellfit.com/how-to-jog-in-place-5200866",
+};
+
+const data = {
+  1: {
+    phase: "Phase 1: Foundation", sub: "3 days/week · 45 min",
+    days: [
+      { label: "Day 1 — strength",
+        warmup: [
+          ["Jog in place","2 min","Get the legs warm"],
+          ["Leg swings","10 each side","Front to back, then side to side"],
+          ["Hip circles","10 each direction","Big slow circles"],
+          ["Lateral shuffles","30 sec","Stay low, feet don't cross"],
+        ],
+        main: [
+          ["Bodyweight squat","3 sets × 15 reps","Sit back, knees track over toes"],
+          ["Glute bridge","3 sets × 12 reps","Squeeze at the top for 1 sec"],
+          ["Lateral lunge","3 sets × 8 each side","Chest up, push through the heel"],
+          ["Pushup","3 sets × 10 reps","Full body plank — don't let hips sag"],
+        ],
+        core: [
+          ["Dead bug","3 sets × 6 each side","Lower back stays flat on floor"],
+          ["Side plank","3 sets × 30 sec each","Stack feet or stagger them"],
+        ]
+      },
+      { label: "Day 2 — power",
+        warmup: [
+          ["Jog in place","2 min",""],
+          ["High knees","30 sec","Drive knees up, pump arms"],
+          ["Leg swings","10 each side",""],
+          ["Lateral shuffles","30 sec","Stay low"],
+        ],
+        main: [
+          ["Broad jump","3 sets × 5 reps","Land soft — absorb with your legs"],
+          ["Lateral bound","3 sets × 6 each side","Mimic butterfly push-off"],
+          ["Reverse lunge","3 sets × 10 each side","Back knee hovers just off the floor"],
+          ["Pushup","3 sets × 10 reps",""],
+        ],
+        core: [
+          ["Dead bug","3 sets × 6 each side",""],
+          ["Hollow body hold","3 sets × 20 sec","Arms overhead, lower back flat"],
+        ]
+      },
+      { label: "Run day",
+        warmup: [["Walk","3 min easy","Loosen up, no rush"]],
+        main: [["Intervals","30 sec hard / 90 sec walk × 8 rounds","Hard = 80% effort, not a sprint"]],
+        core: [
+          ["Cool down walk","3 min","Shake it out"],
+          ["Hip flexor stretch","30 sec each side","Lunge position, sink into it"],
+          ["Quad stretch","30 sec each side",""],
+        ]
+      }
+    ]
+  },
+  3: {
+    phase: "Phase 2: Building", sub: "3 days/week · 45 min",
+    days: [
+      { label: "Day 1 — strength",
+        warmup: [
+          ["Jog in place","2 min",""],["Leg swings","10 each side",""],
+          ["Hip circles","10 each direction",""],["Lateral shuffles","30 sec",""],
+        ],
+        main: [
+          ["Bodyweight squat","3 sets × 18 reps","Add a backpack with books if easy"],
+          ["Glute bridge","3 sets × 15 reps","Try single-leg if ready"],
+          ["Lateral lunge","3 sets × 10 each side",""],
+          ["Bulgarian split squat","3 sets × 8 each side","Rear foot on couch, front foot forward"],
+          ["Pushup","3 sets × 12 reps",""],
+        ],
+        core: [
+          ["Dead bug","3 sets × 8 each side",""],
+          ["Side plank","3 sets × 40 sec each",""],
+          ["Copenhagen plank","2 sets × 15 sec each","Side plank, top foot on couch edge — tough!"],
+        ]
+      },
+      { label: "Day 2 — power",
+        warmup: [
+          ["Jog in place","2 min",""],["High knees","30 sec",""],
+          ["Leg swings","10 each side",""],["Lateral shuffles","30 sec",""],
+        ],
+        main: [
+          ["Broad jump","3 sets × 6 reps","Land soft"],
+          ["Lateral bound","3 sets × 8 each side",""],
+          ["Squat jump","3 sets × 8 reps","Explode up, land with bent knees"],
+          ["Reverse lunge","3 sets × 12 each side",""],
+          ["Archer pushup","3 sets × 6 each side","One arm bends, one stays straight"],
+        ],
+        core: [
+          ["Dead bug","3 sets × 8 each side",""],
+          ["Hollow body hold","3 sets × 30 sec",""],
+        ]
+      },
+      { label: "Run day",
+        warmup: [["Walk","3 min easy",""]],
+        main: [["Intervals","40 sec hard / 60 sec walk × 8 rounds","Harder ratio — keep pushing"]],
+        core: [
+          ["Cool down walk","3 min",""],
+          ["Hip flexor stretch","30 sec each side",""],
+          ["Glute stretch","30 sec each side","Figure-4 on the ground"],
+        ]
+      }
+    ]
+  },
+  5: {
+    phase: "Phase 3: Power", sub: "3 days/week · 45 min",
+    days: [
+      { label: "Day 1 — strength",
+        warmup: [
+          ["Jog","3 min",""],["Leg swings","10 each side",""],
+          ["Hip circles","10 each direction",""],["Lateral shuffles","30 sec",""],
+        ],
+        main: [
+          ["Bulgarian split squat","4 sets × 10 each side","Add backpack if bodyweight is easy"],
+          ["Single-leg glute bridge","3 sets × 12 each side","Full extension at top"],
+          ["Lateral lunge","3 sets × 12 each side",""],
+          ["Hip thrust","3 sets × 15 reps","Shoulders on couch, drive hips up"],
+          ["Pike pushup","3 sets × 10 reps","Good for goalie shoulder stability"],
+        ],
+        core: [
+          ["Dead bug","3 sets × 10 each side",""],
+          ["Copenhagen plank","3 sets × 20 sec each",""],
+          ["Pallof hold","3 sets × 20 sec each side","Anchor a towel to a fence, press and hold"],
+        ]
+      },
+      { label: "Day 2 — power",
+        warmup: [
+          ["Jog","3 min",""],["High knees","30 sec",""],
+          ["Leg swings","10 each side",""],["Lateral shuffles","30 sec",""],
+        ],
+        main: [
+          ["Broad jump","3 sets × 6 reps","Land soft, check knee alignment"],
+          ["Lateral bound","4 sets × 8 each side",""],
+          ["Squat jump","3 sets × 10 reps",""],
+          ["Single-leg hop","3 sets × 6 each side","Stick the landing for 2 sec"],
+          ["Archer pushup","3 sets × 8 each side",""],
+        ],
+        core: [
+          ["Dead bug","3 sets × 10 each side",""],
+          ["Hollow body hold","3 sets × 40 sec",""],
+        ]
+      },
+      { label: "Run day",
+        warmup: [["Walk","3 min",""]],
+        main: [["Intervals","45 sec hard / 45 sec walk × 10 rounds","1:1 ratio — you're ready for it"]],
+        core: [
+          ["Cool down walk","3 min",""],
+          ["Hip flexor stretch","30 sec each side",""],
+          ["Glute stretch","30 sec each side",""],
+        ]
+      }
+    ]
+  },
+  7: {
+    phase: "Phase 4: Game Shape", sub: "3 days/week · 45 min",
+    days: [
+      { label: "Day 1 — full strength",
+        warmup: [
+          ["Jog","3 min",""],["Leg swings","10 each side",""],
+          ["Hip circles","10 each direction",""],["Lateral shuffles","30 sec",""],
+        ],
+        main: [
+          ["Bulgarian split squat","4 sets × 12 each side","Backpack on — push yourself"],
+          ["Single-leg glute bridge","4 sets × 12 each side",""],
+          ["Hip thrust","4 sets × 15 reps",""],
+          ["Lateral lunge","3 sets × 12 each side",""],
+          ["Archer pushup","3 sets × 10 each side",""],
+          ["Pike pushup","3 sets × 12 reps",""],
+        ],
+        core: [
+          ["Copenhagen plank","3 sets × 25 sec each",""],
+          ["Dead bug","3 sets × 10 each side",""],
+          ["Pallof hold","3 sets × 25 sec each side",""],
+        ]
+      },
+      { label: "Day 2 — full power",
+        warmup: [
+          ["Jog","3 min",""],["High knees","30 sec",""],
+          ["Leg swings","10 each side",""],["Lateral shuffles","30 sec",""],
+        ],
+        main: [
+          ["Broad jump","4 sets × 6 reps",""],
+          ["Lateral bound","4 sets × 10 each side",""],
+          ["Squat jump","4 sets × 10 reps",""],
+          ["Single-leg hop","3 sets × 8 each side","Stick it, hold 2 sec"],
+          ["Archer pushup","3 sets × 10 each side",""],
+        ],
+        core: [
+          ["Hollow body hold","3 sets × 45 sec",""],
+          ["Copenhagen plank","3 sets × 25 sec each",""],
+        ]
+      },
+      { label: "Run day",
+        warmup: [["Walk","3 min",""]],
+        main: [["Intervals","45 sec hard / 45 sec walk × 12 rounds","Same ratio, more volume — you've earned it"]],
+        core: [
+          ["Cool down walk","3 min",""],
+          ["Hip flexor stretch","30 sec each side",""],
+          ["Glute stretch","30 sec each side",""],
+        ]
+      }
+    ]
+  }
+};
+
+let currentWeek = 1;
+let currentDay = 0;
+let checked = {};
+try { checked = JSON.parse(localStorage.getItem('goalie_checked') || '{}'); } catch(e) {}
+
+function save() { try { localStorage.setItem('goalie_checked', JSON.stringify(checked)); } catch(e) {} }
+function getKey() { return `w${currentWeek}d${currentDay}`; }
+
+function setWeek(w) {
+  currentWeek = w;
+  document.querySelectorAll('.week-tab').forEach((t,i) => t.classList.toggle('active', [1,3,5,7][i]===w));
+  renderDay();
+}
+
+function setDay(d) {
+  currentDay = d;
+  document.querySelectorAll('.day-tab').forEach((t,i) => t.classList.toggle('active', i===d));
+  renderDay();
+}
+
+function toggle(key, idx) {
+  const k = key+'_'+idx;
+  checked[k] = !checked[k];
+  save();
+  renderDay();
+}
+
+function resetDay() {
+  const key = getKey();
+  Object.keys(checked).forEach(k => { if(k.startsWith(key)) delete checked[k]; });
+  save();
+  renderDay();
+}
+
+function renderDay() {
+  const week = data[currentWeek];
+  const day = week.days[currentDay];
+  document.getElementById('phase-badge').textContent = week.phase;
+  document.getElementById('header-sub').textContent = week.sub;
+
+  const key = getKey();
+  const all = [...(day.warmup||[]), ...(day.main||[]), ...(day.core||[])];
+  const total = all.length;
+  const done = all.filter((_,i) => checked[key+'_'+i]).length;
+  const pct = total ? Math.round(done/total*100) : 0;
+
+  document.getElementById('progress-text').textContent = `${done} of ${total} done`;
+  document.getElementById('progress-fill').style.width = pct+'%';
+
+  const confetti = document.getElementById('confetti');
+  confetti.classList.toggle('show', done === total && total > 0);
+
+  let html = '';
+  let idx = 0;
+
+  function section(label, exs) {
+    if(!exs||!exs.length) return;
+    html += `<div class="section-label">${label}</div>`;
+    exs.forEach(([name,detail,tip]) => {
+      const i = idx++;
+      const isDone = checked[key+'_'+i];
+      const url = links[name];
+      const howBtn = url ? `<a class="how-btn" href="${url}" target="_blank" rel="noopener">▶ how to</a>` : '';
+      html += `<div class="ex-card${isDone?' done':''}">
+        <div class="check" onclick="toggle('${key}',${i})"><span class="check-icon">✓</span></div>
+        <div class="ex-info">
+          <div class="ex-name">${name}</div>
+          <div class="ex-detail">${detail}</div>
+          ${tip?`<div class="ex-tip">${tip}</div>`:''}
+          ${howBtn}
+        </div>
+      </div>`;
+    });
+  }
+
+  section('warmup', day.warmup);
+  section('main work', day.main);
+  section('core / cooldown', day.core);
+  document.getElementById('exercise-list').innerHTML = html;
+}
+
+renderDay();
+</script>
+</body>
+</html>
